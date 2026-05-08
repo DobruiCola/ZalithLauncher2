@@ -93,7 +93,7 @@ private const val MICROSOFT_LOGGING_TASK = "microsoft_logging_task"
 /**
  * 检查当前微软账号登陆是否正在进行中
  */
-fun isMicrosoftLogging() = TaskSystem.containsTask(MICROSOFT_LOGGING_TASK)
+fun isMicrosoftLogging() = true
 
 fun microsoftLogin(
     context: Context,
