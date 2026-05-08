@@ -174,16 +174,7 @@ fun AccountManageScreen(
     }
 
     LaunchedEffect(Unit) {
-        when (key.loginMenu) {
-            FirstLoginMenu.NONE -> {}
-            FirstLoginMenu.MICROSOFT -> {
-                actions.onIntent(AccountManageIntent.UpdateMicrosoftLoginOp(MicrosoftLoginOperation.Tip))
-            }
-            FirstLoginMenu.NORMAL -> {
-                actions.onIntent(AccountManageIntent.UpdateLoginMenuOp(LoginMenuOperation.Login))
-            }
-        }
-
+        actions.onIntent(AccountManageIntent.UpdateLoginMenuOp(LoginMenuOperation.Login))
         viewModel.effect.collect { effect ->
             when (effect) {
                 is AccountManageEffect.ShowError -> {
