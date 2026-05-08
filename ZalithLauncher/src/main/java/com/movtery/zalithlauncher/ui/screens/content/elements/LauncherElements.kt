@@ -47,7 +47,6 @@ import com.movtery.zalithlauncher.game.version.installed.Version
 import com.movtery.zalithlauncher.setting.AllSettings
 import com.movtery.zalithlauncher.ui.components.SimpleAlertDialog
 import com.movtery.zalithlauncher.ui.components.VideoPlayer
-import com.movtery.zalithlauncher.ui.screens.content.FirstLoginMenu
 import com.movtery.zalithlauncher.utils.checkStoragePermissions
 import com.movtery.zalithlauncher.utils.file.InvalidFilenameException
 import com.movtery.zalithlauncher.utils.file.checkFilenameValidity
@@ -121,7 +120,7 @@ fun LaunchGameOperation(
     updateOperation: (LaunchGameOperation) -> Unit,
     exitActivity: () -> Unit,
     submitError: (ErrorViewModel.ThrowableMessage) -> Unit,
-    toAccountManageScreen: (FirstLoginMenu) -> Unit = {},
+    toAccountManageScreen: () -> Unit = {},
     toVersionManageScreen: () -> Unit = {}
 ) {
     when (launchGameOperation) {
@@ -151,10 +150,7 @@ fun LaunchGameOperation(
                 withContext(Dispatchers.Main) {
                     Toast.makeText(activity, R.string.game_launch_no_account, Toast.LENGTH_SHORT).show()
                 }
-                val isOffline = AccountsManager.isOffline.value
-                toAccountManageScreen(
-                    FirstLoginMenu.NORMAL
-                )
+                toAccountManageScreen()
                 updateOperation(LaunchGameOperation.None)
             }
         }
@@ -225,7 +221,7 @@ fun LaunchGameOperation(
 
                 val quickPlay = launchGameOperation.quickPlay
 
-                AccountsManager.currentAccountFlow.value ?: run {
+                AccountsManager.getCurrentAccount() ?: run {
                     updateOperation(LaunchGameOperation.NoAccount)
                     return@LaunchedEffect
                 }
@@ -287,11 +283,10 @@ fun LaunchGameOperation(
 @Composable
 fun Background(
     viewModel: BackgroundViewModel,
-    modifier: Modifier = Modifier,
-    allowVideo: Boolean = true
+    modifier: Modifier = Modifier
 ) {
     when {
-        viewModel.isVideo && allowVideo -> {
+        viewModel.isVideo -> {
             VideoPlayer(
                 videoUri = Uri.fromFile(viewModel.backgroundFile),
                 modifier = modifier,
